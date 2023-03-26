@@ -1,9 +1,18 @@
 const express = require( 'express' )
 
+const { signup, signin, signout } = require( './controller' )
+const {
+  isEmailExist,
+  isPasswordCorrect,
+  isUserAlreadyExist,
+  validateSignUp,
+  validateSignIn,
+} = require( './middleware' )
+
 const authRouter = express.Router()
 
-authRouter.all( '*', ( req, res, next ) => {
-  return res.send( 'Auth routes' )
-} )
+authRouter.post( '/signup', validateSignUp, isUserAlreadyExist, signup )
+authRouter.post( '/signin', validateSignIn, isEmailExist, isPasswordCorrect, signin )
+authRouter.get( '/signout', signout )
 
 module.exports = authRouter

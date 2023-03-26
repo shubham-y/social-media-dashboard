@@ -6,6 +6,7 @@ const compression = require( 'compression' )
 const dotenv = require( 'dotenv' )
 const morgan = require( 'morgan' )
 const boom = require( 'express-boom' )
+const cookieParser = require( 'cookie-parser' )
 
 const routes = require( './router' )
 const { connectDb } = require( './config/db' )
@@ -39,6 +40,9 @@ const createApp = () => {
   // parse urlencoded request body
   app.use( express.urlencoded( { extended: true } ) )
 
+  // cookie parser
+  app.use( cookieParser() )
+
   // gzip compression
   app.use( compression() )
 
@@ -47,12 +51,6 @@ const createApp = () => {
 
   // setup routes
   app.use( '/', routes )
-
-  // use global error handler
-  app.use( ( err, req, res, next ) => {
-    res.boom.notFound( err )
-  },
-  )
 
   return app
 }

@@ -15,9 +15,9 @@ mainRouter.get( '/healthcheck', ( req, res ) => {
   } )
 } )
 mainRouter.all( '*', ( req, res, next ) => {
-  next( res.status( httpStatus.NOT_FOUND ).json( `Route ${req.originalUrl} not found`, {
+  return res.status( httpStatus.NOT_FOUND ).json( `Route ${req.originalUrl} not found`, {
     error: `Route ${req.originalUrl} not found`,
-  } ) )
+  } )
 } )
 
 module.exports = mainRouter

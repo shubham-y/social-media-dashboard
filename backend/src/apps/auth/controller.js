@@ -1,4 +1,5 @@
 const httpStatus = require( 'http-status' )
+const passport = require( 'passport' )
 
 const logger = require( '../../config/logger' )
 const { hashPassword } = require( '../../utils/password' )
@@ -66,8 +67,35 @@ const signout = ( req, res, next ) => {
   }
 }
 
+const facebookConnect = ( req, res, next ) => {
+  let userData
+
+  try {
+    return passport.authenticate( 'facebook', { session: false }, async ( err, accessToken, user ) => {
+      if ( err ) {
+        logger.error( err )
+        return res.boom.unauthorized( 'User cannot be authenticated' )
+      }
+
+      userData = {
+        facebook_id: user.username,
+        facebook_display_name: user.displayName,
+        tokens: {
+          facebookAccessToken: accessToken,
+        },
+      }
+
+      return res.json( { userData } )
+    } )( req, res, next )
+  } catch ( err ) {
+    logger.error( err )
+    return res.boom.badImplementation( 'Error in facebookConnect' )
+  }
+}
+
 module.exports = {
   signup,
   signin,
   signout,
+  facebookConnect,
 }

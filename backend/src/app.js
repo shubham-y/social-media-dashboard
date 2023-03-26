@@ -7,11 +7,14 @@ const dotenv = require( 'dotenv' )
 const morgan = require( 'morgan' )
 const boom = require( 'express-boom' )
 const cookieParser = require( 'cookie-parser' )
+const passport = require( 'passport' )
 
 const routes = require( './router' )
 const { connectDb } = require( './config/db' )
 const { corsOptions } = require( './config/corsOptions' )
 const { httpLogFormatter } = require( './config/morgan' )
+
+require( './config/passport' )
 
 const createApp = () => {
   const app = express()
@@ -48,6 +51,9 @@ const createApp = () => {
 
   // http logger
   app.use( morgan( httpLogFormatter ) )
+
+  // initializing passport
+  app.use( passport.initialize() )
 
   // setup routes
   app.use( '/', routes )

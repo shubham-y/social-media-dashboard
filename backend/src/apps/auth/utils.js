@@ -36,7 +36,9 @@ const getToken = ( req ) => {
   if ( req.headers.authorization?.split( ' ' )[0] === 'Bearer' ) {
     return req.headers.authorization.split( ' ' )[1]
   }
-  return null
+  if ( req.cookies?.process.env.COOKIE_NAME != null ) {
+    return req.cookies.process.env.COOKIE_NAME
+  }
 }
 
 module.exports = {

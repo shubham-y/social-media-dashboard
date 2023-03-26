@@ -1,0 +1,53 @@
+version: '3.8'
+name: 'smd'
+services:
+  server:
+    container_name: backend
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      target: dev
+    volumes:
+      - ./:/code/
+      - ./src:/code/src/
+    restart: unless-stopped
+    networks:
+      - smd
+    ports:
+      - "5000:5000"
+    environment:
+      NODE_ENV: development
+    depends_on:
+      - db
+  db:
+    container_name: database
+    image: mongo
+    restart: always
+    volumes: 
+      - /mongo/data:/data/db
+    networks:
+      - smd
+    hostname: smd-mongodb
+    ports: 
+     - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: mongodbPass
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    networks:
+      - smd
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: mongodbPass
+      ME_CONFIG_MONGODB_URL: mongodb://root:mongodbPass@smd-mongodb:27017/
+networks:
+  smd:
+    driver: bridge
+volumes:
+  db_data:
+    driver: local

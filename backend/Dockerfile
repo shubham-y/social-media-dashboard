@@ -6,7 +6,7 @@ FROM node:16.19.0 as base
 RUN mkdir -p code && chown -R node:node code
 WORKDIR /code
 COPY --chown=node:node package*.json ./
-EXPOSE 5000
+EXPOSE 80
 USER  node
 
 #

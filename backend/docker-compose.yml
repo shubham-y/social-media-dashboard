@@ -1,0 +1,38 @@
+version: '3.8'
+name: 'smd'
+services:
+  server:
+    container_name: backend
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      target: dev
+    volumes:
+      - ./:/code/
+      - ./src:/code/src/
+    restart: unless-stopped
+    networks:
+      - smd
+    ports:
+      - "5000:5000"
+    environment:
+      NODE_ENV: development
+    depends_on:
+      - db
+  db:
+    image: mongo
+    restart: always
+    networks:
+      - smd
+    hostname: smd-mongodb
+    ports: 
+     - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: mongodbPass
+networks:
+  smd:
+    driver: bridge
+volumes:
+  db_data:
+    driver: local

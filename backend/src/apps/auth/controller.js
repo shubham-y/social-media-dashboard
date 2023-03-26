@@ -78,7 +78,7 @@ const facebookConnect = ( req, res, next ) => {
       }
 
       userData = {
-        facebook_id: user.username,
+        facebook_id: user.id,
         facebook_display_name: user.displayName,
         tokens: {
           facebookAccessToken: accessToken,
